@@ -24,8 +24,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dbpack/samples/order_svc/dao"
-	dao2 "github.com/dbpack/samples/product_svc/dao"
+	"github.com/dbpack/dbpack-samples/order_svc/dao"
+	dao2 "github.com/dbpack/dbpack-samples/product_svc/dao"
+)
+
+var (
+	createSoUrl        = "http://order-svc:3001/createSo"
+	updateInventoryUrl = "http://product-svc:3002/allocateInventory"
 )
 
 type Svc struct {
@@ -78,7 +83,7 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 
 	q1 := &rq1{Req: soMasters}
 	soReq, err := json.Marshal(q1)
-	req1, err := http.NewRequest("POST", "http://localhost:3001/createSo", bytes.NewBuffer(soReq))
+	req1, err := http.NewRequest("POST", createSoUrl, bytes.NewBuffer(soReq))
 	if err != nil {
 		panic(err)
 	}
@@ -99,7 +104,7 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 		Req: reqs,
 	}
 	ivtReq, _ := json.Marshal(q2)
-	req2, err := http.NewRequest("POST", "http://localhost:3002/allocateInventory", bytes.NewBuffer(ivtReq))
+	req2, err := http.NewRequest("POST", updateInventoryUrl, bytes.NewBuffer(ivtReq))
 	if err != nil {
 		panic(err)
 	}

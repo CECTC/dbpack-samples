@@ -19,7 +19,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/dbpack/samples/aggregation_svc/svc"
+	"github.com/dbpack/dbpack-samples/aggregation_svc/svc"
 )
 
 func main() {
