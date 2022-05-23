@@ -26,7 +26,7 @@ func main() {
 	r := gin.Default()
 
 	r.POST("/v1/order/create", func(c *gin.Context) {
-		xid := c.GetHeader("x_dbpack_xid")
+		xid := c.GetHeader("x-dbpack-xid")
 		err := svc.GetSvc().CreateSo(c, xid, false)
 		if err != nil {
 			c.JSON(400, gin.H{
@@ -42,7 +42,7 @@ func main() {
 	})
 
 	r.POST("/v1/order/create2", func(c *gin.Context) {
-		xid := c.GetHeader("x_dbpack_xid")
+		xid := c.GetHeader("x-dbpack-xid")
 		err := svc.GetSvc().CreateSo(c, xid, true)
 		if err != nil {
 			c.JSON(400, gin.H{

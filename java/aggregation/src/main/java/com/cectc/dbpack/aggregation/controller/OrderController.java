@@ -32,14 +32,14 @@ public class OrderController extends BaseController {
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public @ResponseBody
-    StandResponse<List<Long>> createSo(@RequestHeader("x_dbpack_xid") String xid) {
+    StandResponse<List<Long>> createSo(@RequestHeader("x-dbpack-xid") String xid) {
         List<Long> soIds = orderService.CreateSo(xid);
         return success(soIds);
     }
 
     @RequestMapping(value = "create2", method = RequestMethod.POST)
     public @ResponseBody
-    StandResponse<List<Long>> createSo2(@RequestHeader("x_dbpack_xid") String xid) {
+    StandResponse<List<Long>> createSo2(@RequestHeader("x-dbpack-xid") String xid) {
         orderService.CreateSo(xid);
         throw new RuntimeException("exception");
     }
