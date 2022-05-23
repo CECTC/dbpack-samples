@@ -6,7 +6,7 @@ $reqPath = strtok($_SERVER["REQUEST_URI"], '?');
 $reaHeaders = getallheaders();
 
 // "x" is in upper case here returned by getallheaders() function
-$xid = $reaHeaders['X_dbpack_xid'] ?? '';
+$xid = $reaHeaders['X-dbpack-xid'] ?? '';
 
 if (empty($xid)) {
     die('xid is not provided!');

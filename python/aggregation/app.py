@@ -12,7 +12,7 @@ def create_2():
    return create_so(rollback=True)
 
 def create_so(rollback=True):
-    xid = request.headers.get("x_dbpack_xid")
+    xid = request.headers.get("x-dbpack-xid")
 
     so_items = [dict(
         product_sysno=1,

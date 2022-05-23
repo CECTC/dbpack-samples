@@ -4,13 +4,12 @@ listeners:
       address: 0.0.0.0
       port: 13000
     config:
-      backend_host: localhost:3000
+      backend_host: aggregation-svc:3000
     filters:
-      - httpDTFilter
+      - HttpDistributedTransaction
 
 filters:
-  - name: httpDTFilter
-    kind: HttpDistributedTransaction
+  - name: HttpDistributedTransaction
     conf:
       appid: aggregationSvc
       transaction_infos:
@@ -25,4 +24,4 @@ distributed_transaction:
   rollback_retry_timeout_unlock_enable: true
   etcd_config:
     endpoints:
-      - localhost:2379
+      - etcd:2379

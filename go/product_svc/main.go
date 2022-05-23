@@ -21,13 +21,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cectc/dbpack/pkg/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql" // register mysql
 
-	"github.com/dbpack/samples/product_svc/dao"
+	"github.com/dbpack/dbpack-samples/product_svc/dao"
 )
 
-var dsn = `dksl:123456@tcp(127.0.0.1:13307)/product?timeout=60s&readTimeout=60s&writeTimeout=60s&parseTime=true&loc=Local&charset=utf8mb4,utf8`
+var dsn = `dksl:123456@tcp(dbpack2:13307)/product?timeout=60s&readTimeout=60s&writeTimeout=60s&parseTime=true&loc=Local&charset=utf8mb4,utf8`
 
 func main() {
 	r := gin.Default()
@@ -62,6 +63,7 @@ func main() {
 		err := d.AllocateInventory(c, xid, q.Req)
 
 		if err != nil {
+			log.Error(err)
 			c.JSON(400, gin.H{
 				"success": false,
 				"message": "fail",
