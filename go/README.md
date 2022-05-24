@@ -28,15 +28,14 @@ docker run -d --name etcd-server \
 
 ### Step3: run dbpack
 ```bash
-vim ./go/scripts/config1.yaml
-# update listeners[0].config.backend_host
+vim ./configs/config1.yaml
 # update distributed_transaction.etcd_config.endpoints
 
-vim ./go/scripts/config2.yaml
+vim ./configs/config2.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
-vim ./go/scripts/config3.yaml
+vim ./configs/config3.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
@@ -44,11 +43,11 @@ cd ../dbpack
 
 make build-local
 
-./dist/dbpack start --config ../dbpack-samples/go/scripts/config1.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config1.yaml
 
-./dist/dbpack start --config ../dbpack-samples/go/scripts/config2.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config2.yaml
 
-./dist/dbpack start --config ../dbpack-samples/go/scripts/config3.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config3.yaml
 ```
 
 ### Step4: setup order_svc client

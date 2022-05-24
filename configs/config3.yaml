@@ -20,7 +20,7 @@ data_source_cluster:
     capacity: 30
     max_capacity: 100
     idle_timeout: 60s
-    dsn: root:123456@tcp(127.0.0.1:3306)/order?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8
+    dsn: root:123456@tcp(127.0.0.1:3306)/order?timeout=60s&readTimeout=60s&writeTimeout=60s&parseTime=true&loc=Local&charset=utf8mb4,utf8
     ping_interval: 20s
     ping_times_for_change_status: 3
     filters:
@@ -42,4 +42,4 @@ distributed_transaction:
     endpoints:
       - localhost:2379
 
-exporter_port: 18890
+http_listen_port: 18890
