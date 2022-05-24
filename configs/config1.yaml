@@ -9,7 +9,8 @@ listeners:
       - HttpDistributedTransaction
 
 filters:
-  - name: HttpDistributedTransaction
+  - name: httpDTFilter
+    kind: HttpDistributedTransaction
     conf:
       appid: aggregationSvc
       transaction_infos:

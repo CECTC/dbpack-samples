@@ -22,14 +22,14 @@ cd dbpack-samples
 
 ### Step3: run dbpack
 ```bash
-vim ./php/config1.yaml
+vim ./configs/config1.yaml
 # update distributed_transaction.etcd_config.endpoints
 
-vim ./php/config2.yaml
+vim ./configs/config2.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
-vim ./php/config3.yaml
+vim ./configs/config3.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
@@ -40,11 +40,11 @@ make build-local
 # production build
 make build
 
-./dist/dbpack start -config ../dbpack-samples/php/config1.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config1.yaml
 
-./dist/dbpack start -config ../dbpack-samples/php/config2.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config2.yaml
 
-./dist/dbpack start -config ../dbpack-samples/php/config3.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config3.yaml
 ```
 
 ### Step4: setup aggregation_svc client
