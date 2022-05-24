@@ -18,10 +18,10 @@ package main
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 	"time"
 
-	"github.com/cectc/dbpack/pkg/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql" // register mysql
 
@@ -63,7 +63,7 @@ func main() {
 		err := d.AllocateInventory(c, xid, q.Req)
 
 		if err != nil {
-			log.Error(err)
+			log.Default().Println(err)
 			c.JSON(400, gin.H{
 				"success": false,
 				"message": "fail",
