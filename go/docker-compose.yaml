@@ -38,7 +38,7 @@ services:
     ports:
       - "13000:13000"
     volumes:
-      - ./scripts/config1.yaml:/config1.yaml
+      - ../configs/config1.yaml:/config1.yaml
     depends_on:
       - etcd
       - mysql
@@ -51,7 +51,7 @@ services:
     ports:
       - "13307:13307"
     volumes:
-      - ./scripts/config2.yaml:/config2.yaml
+      - ../configs/config2.yaml:/config2.yaml
     depends_on:
       - etcd
       - mysql
@@ -64,7 +64,7 @@ services:
     ports:
       - "13308:13308"
     volumes:
-      - ./scripts/config3.yaml:/config3.yaml
+      - ../configs/config3.yaml:/config3.yaml
     depends_on:
       - etcd
       - mysql

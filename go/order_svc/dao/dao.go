@@ -20,9 +20,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
-	"github.com/cectc/dbpack/pkg/log"
 	"github.com/google/uuid"
 )
 
@@ -94,7 +94,7 @@ func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster)
 			soMaster.PaymentType, soMaster.SoAmt, soMaster.Status, soMaster.AppID, soMaster.Memo)
 		if err != nil {
 			if err != tx.Rollback() {
-				log.Error(err)
+				log.Default().Println(err)
 			}
 			return nil, err
 		}
@@ -105,7 +105,7 @@ func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster)
 				soItem.DealPrice, soItem.Quantity)
 			if err != nil {
 				if err != tx.Rollback() {
-					log.Error(err)
+					log.Default().Println(err)
 				}
 				return nil, err
 			}

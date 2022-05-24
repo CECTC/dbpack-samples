@@ -20,8 +20,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-
-	"github.com/cectc/dbpack/pkg/log"
+	"log"
 )
 
 const (
@@ -48,7 +47,7 @@ func (dao *Dao) AllocateInventory(ctx context.Context, xid string, reqs []*Alloc
 		_, err := tx.Exec(updateInventory, req.Qty, req.Qty, req.ProductSysNo, req.Qty)
 		if err != nil {
 			if err != tx.Rollback() {
-				log.Error(err)
+				log.Default().Println(err)
 			}
 			return err
 		}
