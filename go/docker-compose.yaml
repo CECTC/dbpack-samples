@@ -31,7 +31,7 @@ services:
     - ../scripts/product.sql:/docker-entrypoint-initdb.d/product.sql:rw
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
   dbpack1:
-    image: cectc/dbpack:v0.1.0
+    image: cectc/dbpack:latest
     container_name: dbpack1
     networks:
       - local
@@ -44,7 +44,7 @@ services:
       - mysql
     command: ["/dbpack", "start", "-c", "/config1.yaml"]
   dbpack2:
-    image: cectc/dbpack:v0.1.0
+    image: cectc/dbpack:latest
     container_name: dbpack2
     networks:
       - local
@@ -57,7 +57,7 @@ services:
       - mysql
     command: ["/dbpack", "start", "-c", "/config2.yaml"]
   dbpack3:
-    image: cectc/dbpack:v0.1.0
+    image: cectc/dbpack:latest
     container_name: dbpack3
     networks:
       - local
