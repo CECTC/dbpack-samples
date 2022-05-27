@@ -25,4 +25,4 @@ distributed_transaction:
   rollback_retry_timeout_unlock_enable: true
   etcd_config:
     endpoints:
-      - etcd:2379
+      - localhost:2379
