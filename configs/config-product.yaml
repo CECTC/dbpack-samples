@@ -1,6 +1,7 @@
 probe_port: 18889
 tracer:
-  jaeger_endpoint: http://jaeger:14268/api/traces
+  exporter_endpoint: http://jaeger:14268/api/traces
+  exporter_type: jaeger
 termination_drain_duration: 3s
 app_config:
   productSvc:
