@@ -3,6 +3,9 @@ import requests
 
 app = Flask(__name__)
 
+create_so_url        = "http://order-svc:3001/createSo"
+update_inventory_url = "http://product-svc:3002/allocateInventory"
+
 @app.route('/v1/order/create', methods=['POST'])
 def create_1():
    return create_so(rollback=False)
@@ -47,12 +50,12 @@ def create_so(rollback=True):
     }
 
     so_req = dict(req=so_master)
-    resp1 = requests.post("http://localhost:3001/createSo", headers=headers, json=so_req, timeout=30)
+    resp1 = requests.post(create_so_url, headers=headers, json=so_req)
     if resp1.status_code == 400:
         return failed
 
     ivt_req = dict(req=[dict(product_sysno= 1, qty=2)])
-    resp2 = requests.post("http://localhost:3002/allocateInventory", headers=headers, json=ivt_req, timeout=30)
+    resp2 = requests.post(update_inventory_url, headers=headers, json=ivt_req)
     if resp2.status_code == 400:
         return failed
 
@@ -63,4 +66,4 @@ def create_so(rollback=True):
     return success
 
 if __name__ == "__main__":
-    app.run(port=3000)
+    app.run(host="0.0.0.0", port=3000)

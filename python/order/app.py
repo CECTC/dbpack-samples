@@ -1,25 +1,38 @@
 from flask import Flask, jsonify, request
 from datetime import datetime
-
-import random
-
 import mysql.connector
 
+import time
+import random
 
 app = Flask(__name__)
 
-conn = mysql.connector.connect(
-  host="127.0.0.1",
-  port="13308",
-  user="dksl",
-  password="123456",
-  database="order",
-)
- 
-cursor = conn.cursor(prepared=True)
-
 insert_so_master = "INSERT /*+ XID('{xid}') */ INTO order.so_master({keys}) VALUES ({placeholders})"
 insert_so_item = "INSERT /*+ XID('{xid}') */ INTO order.so_item({keys}) VALUES ({placeholders})"
+
+def conn():
+    retry = 0
+    while retry < 3:
+        time.sleep(5)
+        try:
+            c = mysql.connector.connect(
+              host="dbpack3",
+              port=13308,
+              user="dksl",
+              password="123456",
+              database="order",
+              autocommit=True,
+            )
+            if c.is_connected():
+                db_Info = c.get_server_info()
+                print("Connected to MySQL Server version ", db_Info)
+                return c
+        except Exception as e:
+            print(e.args)
+        retry += 1 
+ 
+connection = conn()
+cursor = connection.cursor(prepared=True,)
 
 @app.route('/createSo', methods=['POST'])
 def create_so():
