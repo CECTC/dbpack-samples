@@ -38,11 +38,11 @@ services:
     ports:
       - "13000:13000"
     volumes:
-      - ../configs/config1.yaml:/config1.yaml
+      - ../configs/config-aggregation.yaml:/config-aggregation.yaml
     depends_on:
       - etcd
       - mysql
-    command: ["/dbpack", "start", "-c", "/config1.yaml"]
+    command: ["/dbpack", "start", "-c", "/config-aggregation.yaml"]
   dbpack2:
     image: cectc/dbpack:latest
     container_name: dbpack2
@@ -51,11 +51,11 @@ services:
     ports:
       - "13307:13307"
     volumes:
-      - ../configs/config2.yaml:/config2.yaml
+      - ../configs/config-product.yaml:/config-product.yaml
     depends_on:
       - etcd
       - mysql
-    command: ["/dbpack", "start", "-c", "/config2.yaml"]
+    command: ["/dbpack", "start", "-c", "/config-product.yaml"]
   dbpack3:
     image: cectc/dbpack:latest
     container_name: dbpack3
@@ -64,11 +64,11 @@ services:
     ports:
       - "13308:13308"
     volumes:
-      - ../configs/config3.yaml:/config3.yaml
+      - ../configs/config-order.yaml:/config-order.yaml
     depends_on:
       - etcd
       - mysql
-    command: ["/dbpack", "start", "-c", "/config3.yaml"]
+    command: ["/dbpack", "start", "-c", "/config-order.yaml"]
   aggregation-svc:
     build:
       context: ${PWD}
