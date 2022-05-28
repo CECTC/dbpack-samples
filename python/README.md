@@ -17,14 +17,14 @@ cd dbpack-samples
 
 ### Step3: run dbpack
 ```bash
-vim ./configs/config1.yaml
+vim ./configs/config-aggregation.yaml
 # update distributed_transaction.etcd_config.endpoints
 
-vim ./configs/config2.yaml
+vim ./configs/config-product.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
-vim ./configs/config3.yaml
+vim ./configs/config-order.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
@@ -32,11 +32,11 @@ cd ../dbpack
 
 make build-local
 
-./dist/dbpack start --config ../dbpack-samples/configs/config1.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config-aggregation.yaml
 
-./dist/dbpack start --config ../dbpack-samples/configs/config2.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config-product.yaml
 
-./dist/dbpack start --config ../dbpack-samples/configs/config3.yaml
+./dist/dbpack start --config ../dbpack-samples/configs/config-order.yaml
 ```
 
 ### Step4: setup python requirements
