@@ -37,8 +37,8 @@ import java.util.List;
 @Service
 public class OrderService {
     final static Logger logger = LoggerFactory.getLogger(BaseController.class);
-    private static final String createSoUrl = "http://localhost:3001/order/v1/so/insert";
-    private static final String allocateInventoryUrl = "http://localhost:3002/product/v1/product/allocateInventory";
+    private static final String createSoUrl = "http://order-svc:3001/order/v1/so/insert";
+    private static final String allocateInventoryUrl = "http://product-svc:3002/product/v1/product/allocateInventory";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
