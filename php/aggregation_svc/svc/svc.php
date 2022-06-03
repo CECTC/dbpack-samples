@@ -47,7 +47,7 @@ class AggregationSvc
                 ],
             ],
         ];
-        $url = 'http://localhost:3001/createSo';
+        $url = 'http://order-svc:3001/createSo';
         $response = $this->sendRequest($url, $xid, $soMasters);
         if (empty($response)) {
             return false;
@@ -64,7 +64,7 @@ class AggregationSvc
                 'Qty' => 2,
             ],
         ];
-        $url = 'http://localhost:3002/allocateInventory';
+        $url = 'http://product-svc:3002/allocateInventory';
         $response = $this->sendRequest($url, $xid, $allocateInventoryReq);
         if (empty($response)) {
             return false;
@@ -88,10 +88,6 @@ class AggregationSvc
 
         $response = curl_exec($ch);
         if ($response === false) {
-            return "";
-        }
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($httpCode == 400) {
             return "";
         }
         curl_close($ch);

@@ -1,7 +1,14 @@
 # dbpack-samples for php
 
+Simply, you can build the environment by running the `make run` command. then, you can test by 
+- `curl -XPOST http://localhost:13000/v1/order/create` for transaction commit test, or
+- `curl -XPOST http://localhost:13000/v1/order/create2` for transaction rollback test.
+
+Then check whether the database data is consistent.  
+Alternatively, you can manually build the environment according to the following steps.  
+
 ### Prerequisite
-- php version >= php7
+- php version == 7.4
 - php pdo extension is installed
 - when using pdo to connect to mysql server, should set `PDO::ATTR_EMULATE_PREPARES => false` to enable dpback distributed transaction
 

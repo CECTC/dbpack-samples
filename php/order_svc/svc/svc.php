@@ -6,10 +6,10 @@ class OrderDB
 {
     private PDO $_connection;
     private static OrderDB $_instance;
-    private string $_host = '127.0.0.1';
+    private string $_host = 'dbpack-order';
     private int $_port = 13308;
-    private string $_username = 'hehe';
-    private string $_password = 'hehe';
+    private string $_username = 'dksl';
+    private string $_password = '123456';
     private string $_database = 'order';
 
     const insertSoMaster = "INSERT /*+ XID('%s') */ INTO order.so_master (sysno, so_id, buyer_user_sysno, seller_company_code, 
@@ -55,14 +55,20 @@ class OrderDB
 
     public function createSo(string $xid, array $soMasters): bool
     {
-        $this->getConnection()->beginTransaction();
-
-        foreach ($soMasters as $master) {
-            if (!$this->insertSo($xid, $master)) {
-                $this->getConnection()->rollBack();
+        $this->getConnection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        try {
+            $this->getConnection()->beginTransaction();
+            foreach ($soMasters as $master) {
+                if (!$this->insertSo($xid, $master)) {
+                    throw new PDOException("failed to insert soMaster");
+                }
             }
+            $this->getConnection()->commit();
+        } catch (PDOException $e) {
+            $this->getConnection()->rollBack();
+            return false;
         }
-        return $this->getConnection()->commit();
+        return true;
     }
 
     private function insertSo(string $xid, array $soMaster): bool

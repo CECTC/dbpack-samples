@@ -1,7 +1,11 @@
 # dbpack-samples
 
-Simply, you can build the environment by running the `make run` command. then, you can test by `curl -XPOST http://localhost:13000/v1/order/create
-`, check whether the database data is consistent. Or, you can manually build the environment according to the following steps.
+Simply, you can build the environment by running the `make run` command. then, you can test by
+- `curl -XPOST http://localhost:13000/v1/order/create` for transaction commit test, or
+- `curl -XPOST http://localhost:13000/v1/order/create2` for transaction rollback test.
+
+Then check whether the database data is consistent.  
+Alternatively, you can manually build the environment according to the following steps.
 
 ### Step0: Clone dbpack and dbpack-samples
 ```shell
