@@ -4,7 +4,8 @@ require './svc/svc.php';
 
 $reqPath = strtok($_SERVER["REQUEST_URI"], '?');
 $reqHeaders = getallheaders();
-$xid = $reqHeaders['xid'] ?? '';
+
+$xid = $reqHeaders['Xid'] ?? '';
 
 if (empty($xid)) {
     die('xid is not provided!');

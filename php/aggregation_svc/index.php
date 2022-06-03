@@ -5,8 +5,7 @@ require './svc/svc.php';
 $reqPath = strtok($_SERVER["REQUEST_URI"], '?');
 $reaHeaders = getallheaders();
 
-// "x" is in upper case here returned by getallheaders() function
-$xid = $reaHeaders['X-dbpack-xid'] ?? '';
+$xid = $reaHeaders['X-Dbpack-Xid'] ?? '';
 
 if (empty($xid)) {
     die('xid is not provided!');

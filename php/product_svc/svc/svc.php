@@ -6,10 +6,10 @@ class ProductDB
 {
     private PDO $_connection;
     private static ProductDB $_instance;
-    private string $_host = '127.0.0.1';
+    private string $_host = 'dbpack-product';
     private int $_port = 13307;
-    private string $_username = 'hehe';
-    private string $_password = 'hehe';
+    private string $_username = 'dksl';
+    private string $_password = '123456';
     private string $_database = 'product';
 
     const allocateInventorySql = "update /*+ XID('%s') */ product.inventory set available_qty = available_qty - ?, 
@@ -51,23 +51,29 @@ class ProductDB
 
     public function allocateInventory(string $xid, array $inventories): bool
     {
-        $this->getConnection()->beginTransaction();
+        $this->getConnection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        try {
+            $this->getConnection()->beginTransaction();
+            foreach ($inventories as $inventory) {
+                $allocateInventorySql = sprintf(self::allocateInventorySql, $xid);
 
-        foreach ($inventories as $inventory) {
-            $allocateInventorySql = sprintf(self::allocateInventorySql, $xid);
+                $statement = $this->getConnection()->prepare($allocateInventorySql);
+                $statement->bindValue(1, $inventory['Qty']);
+                $statement->bindValue(2, $inventory['Qty']);
+                $statement->bindValue(3, $inventory['ProductSysNo']);
+                $statement->bindValue(4, $inventory['Qty']);
 
-            $statement = $this->getConnection()->prepare($allocateInventorySql);
-            $statement->bindValue(1, $inventory['Qty']);
-            $statement->bindValue(2, $inventory['Qty']);
-            $statement->bindValue(3, $inventory['ProductSysNo']);
-            $statement->bindValue(4, $inventory['Qty']);
-
-            $result = $statement->execute();
-            if (!$result) {
-                $this->getConnection()->rollBack();
+                $result = $statement->execute();
+                if (!$result) {
+                    throw new PDOException("failed to allocateInventory");
+                }
             }
+            $this->getConnection()->commit();
+        } catch (PDOException $e) {
+            $this->getConnection()->rollBack();
+            return false;
         }
-        return $this->getConnection()->commit();
+        return true;
     }
 }
 

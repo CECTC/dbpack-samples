@@ -1,0 +1,140 @@
+version: "2.3"
+services:
+  etcd:
+    image: docker.io/bitnami/etcd:3
+    container_name: etcd
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_NAME=etcd
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+      - ETCD_INITIAL_CLUSTER=etcd=http://etcd:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+    networks:
+      - local
+    ports:
+      - "2379:2379"
+  mysql:
+    image: mysql:8.0
+    container_name: dbpack-mysql
+    networks:
+      - local
+    ports:
+    - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    volumes:
+    - ../scripts/order.sql:/docker-entrypoint-initdb.d/order.sql:rw
+    - ../scripts/product.sql:/docker-entrypoint-initdb.d/product.sql:rw
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+  dbpack-aggregation:
+    image: cectc/dbpack:latest
+    container_name: dbpack-aggregation
+    networks:
+      - local
+    ports:
+      - "13000:13000"
+    volumes:
+      - ../configs/config-aggregation.yaml:/config-aggregation.yaml
+    depends_on:
+      - etcd
+      - mysql
+    command: ["/dbpack", "start", "-c", "/config-aggregation.yaml"]
+  dbpack-product:
+    image: cectc/dbpack:latest
+    container_name: dbpack-product
+    networks:
+      - local
+    ports:
+      - "13307:13307"
+    volumes:
+      - ../configs/config-product.yaml:/config-product.yaml
+    depends_on:
+      - etcd
+      - mysql
+    command: ["/dbpack", "start", "-c", "/config-product.yaml"]
+  dbpack-order:
+    image: cectc/dbpack:latest
+    container_name: dbpack-order
+    networks:
+      - local
+    ports:
+      - "13308:13308"
+    volumes:
+      - ../configs/config-order.yaml:/config-order.yaml
+    depends_on:
+      - etcd
+      - mysql
+    command: ["/dbpack", "start", "-c", "/config-order.yaml"]
+  aggregation-svc:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/aggregation/web.dockerfile
+    working_dir: /var/www/code
+    container_name: aggregation-svc
+    networks:
+      - local
+    ports:
+      - "3000:3000"
+    volumes_from:
+      - aggregation-svc-app
+  aggregation-svc-app:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/aggregation/app.dockerfile
+    working_dir: /var/www/code
+    container_name: aggregation-svc-app
+    networks:
+      - local
+    volumes:
+      - ./aggregation_svc/:/var/www/code
+  order-svc:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/order/web.dockerfile
+    working_dir: /var/www/code
+    container_name: order-svc
+    networks:
+      - local
+    ports:
+      - "3001:3001"
+    volumes_from:
+      - order-svc-app
+  order-svc-app:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/order/app.dockerfile
+    working_dir: /var/www/code
+    container_name: order-svc-app
+    networks:
+      - local
+    volumes:
+      - ./order_svc/:/var/www/code
+  product-svc:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/product/web.dockerfile
+    working_dir: /var/www/code
+    container_name: product-svc
+    networks:
+      - local
+    ports:
+      - "3002:3002"
+    volumes_from:
+      - product-svc-app
+  product-svc-app:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/product/app.dockerfile
+    working_dir: /var/www/code
+    container_name: product-svc-app
+    networks:
+      - local
+    volumes:
+      - ./product_svc/:/var/www/code
+networks:
+  local:
+    name: dbpack
