@@ -47,11 +47,11 @@ cd ../dbpack
 
 make build-local
 
-./dist/dbpack start --config ../dbpack-samples/configs/config-aggregation.yaml
+./dbpack start --config ../dbpack-samples/configs/config-aggregation.yaml
 
-./dist/dbpack start --config ../dbpack-samples/configs/config-product.yaml
+./dbpack start --config ../dbpack-samples/configs/config-product.yaml
 
-./dist/dbpack start --config ../dbpack-samples/configs/config-order.yaml
+./dbpack start --config ../dbpack-samples/configs/config-order.yaml
 ```
 
 ### Step4: setup order_svc client
