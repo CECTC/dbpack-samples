@@ -47,11 +47,11 @@ cd ../dbpack
 
 make build-local
 
-./dist/dbpack start --config ../dbpack-samples/configs/config-aggregation.yaml
+./dbpack start --config ../dbpack-samples/configs/config-aggregation.yaml
 
-./dist/dbpack start --config ../dbpack-samples/configs/config-product.yaml
+./dbpack start --config ../dbpack-samples/configs/config-product.yaml
 
-./dist/dbpack start --config ../dbpack-samples/configs/config-order.yaml
+./dbpack start --config ../dbpack-samples/configs/config-order.yaml
 ```
 
 ### Step4: setup order_svc client
@@ -83,6 +83,6 @@ go run aggregation_svc/main.go
 
 ### Step7: access and test
 ```
-curl -XPOST http://localhost:13000/v1/order/create
+curl -XPOST http://localhost:3000/v1/order/create
 ```
 Check whether the database data is consistent.
