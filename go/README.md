@@ -83,6 +83,6 @@ go run aggregation_svc/main.go
 
 ### Step7: access and test
 ```
-curl -XPOST http://localhost:3000/v1/order/create
+curl -XPOST http://localhost:13000/v1/order/create
 ```
 Check whether the database data is consistent.
