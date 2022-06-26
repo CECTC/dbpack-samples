@@ -36,7 +36,7 @@ class OrderDB
                 $this->_password,
                 [
                     PDO::ATTR_PERSISTENT => true,
-                    PDO::ATTR_EMULATE_PREPARES => false, // this option is required to use dbpack distributed transaction
+                    PDO::ATTR_EMULATE_PREPARES => false,
                 ]
             );
         } catch (PDOException $e) {
