@@ -8,4 +8,4 @@ After executing `curl -XPOST http://localhost:8080/transfer-commit`, check log b
 or `docker logs dbpack2`, then, you will see confirm interface be called automatically.
 
 After executing `curl -XPOST http://localhost:8080/transfer-cancel`, check log by `docker logs dbpack1`
-or `docker logs dbpack2`, then, you will see cancel interface be called automatically.
+or `docker logs dbpack2`, then, you will see cancel API been called automatically.
