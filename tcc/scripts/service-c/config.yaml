@@ -1,0 +1,28 @@
+listeners:
+  - protocol_type: http
+    socket_address:
+      address: 0.0.0.0
+      port: 8080
+    config:
+      backend_host: serviceC:8083
+    filters:
+      - httpDTFilter
+
+filters:
+  - name: httpDTFilter
+    kind: HttpDistributedTransaction
+    conf:
+      appid: service-c
+      transaction_infos:
+        - request_path: "/transfer-commit"
+          timeout: 60000
+        - request_path: "/transfer-cancel"
+          timeout: 60000
+
+distributed_transaction:
+  appid: service-c
+  retry_dead_threshold: 130000
+  rollback_retry_timeout_unlock_enable: true
+  etcd_config:
+    endpoints:
+      - etcd:2379

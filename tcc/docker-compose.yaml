@@ -1,0 +1,81 @@
+version: "2.3"
+services:
+  etcd:
+    image: docker.io/bitnami/etcd:3
+    container_name: etcd
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_NAME=etcd
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+      - ETCD_INITIAL_CLUSTER=etcd=http://etcd:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+    networks:
+      - local
+    ports:
+      - "2379:2379"
+  dbpack1:
+    image: cectc/dbpack:latest
+    container_name: dbpack1
+    networks:
+      - local
+    volumes:
+      - ./scripts/service-a/config.yaml:/config.yaml
+    depends_on:
+      - etcd
+    command: ["/dbpack", "start", "-c", "/config.yaml"]
+  dbpack2:
+    image: cectc/dbpack:latest
+    container_name: dbpack2
+    networks:
+      - local
+    volumes:
+      - ./scripts/service-b/config.yaml:/config.yaml
+    depends_on:
+      - etcd
+    command: ["/dbpack", "start", "-c", "/config.yaml"]
+  dbpack3:
+    image: cectc/dbpack:latest
+    container_name: dbpack3
+    networks:
+      - local
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./scripts/service-c/config.yaml:/config.yaml
+    depends_on:
+      - etcd
+    command: ["/dbpack", "start", "-c", "/config.yaml"]
+  service-a:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/service-a/Dockerfile
+    container_name: serviceA
+    networks:
+      - local
+    ports:
+      - "3000:3000"
+  service-b:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/service-b/Dockerfile
+    container_name: serviceB
+    networks:
+      - local
+    ports:
+      - "3001:3001"
+  service-c:
+    build:
+      context: ${PWD}
+      dockerfile: ./scripts/service-c/Dockerfile
+    container_name: serviceC
+    networks:
+      - local
+    ports:
+      - "3002:3002"
+networks:
+  local:
+    name: dbpack
