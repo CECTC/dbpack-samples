@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	allocateInventorySql = `update /*+ XID('%s') */ product.inventory set available_qty = available_qty - ?, 
+	allocateInventorySql = `update /*+ XID('%s') TraceParent('%s') */ product.inventory set available_qty = available_qty - ?, 
 		allocated_qty = allocated_qty + ? where product_sysno = ? and available_qty >= ?`
 )
 
@@ -37,12 +37,12 @@ type AllocateInventoryReq struct {
 	Qty          int32
 }
 
-func (dao *Dao) AllocateInventory(ctx context.Context, xid string, reqs []*AllocateInventoryReq) error {
+func (dao *Dao) AllocateInventory(ctx context.Context, xid, traceParent string, reqs []*AllocateInventoryReq) error {
 	tx, err := dao.Begin()
 	if err != nil {
 		return err
 	}
-	updateInventory := fmt.Sprintf(allocateInventorySql, xid)
+	updateInventory := fmt.Sprintf(allocateInventorySql, xid, traceParent)
 	for _, req := range reqs {
 		_, err := tx.Exec(updateInventory, req.Qty, req.Qty, req.ProductSysNo, req.Qty)
 		if err != nil {

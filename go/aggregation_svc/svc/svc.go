@@ -40,7 +40,7 @@ func GetSvc() *Svc {
 	return &Svc{}
 }
 
-func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
+func (svc *Svc) CreateSo(ctx context.Context, xid string, traceparent string, rollback bool) error {
 	soMasters := []*dao.SoMaster{
 		{
 			BuyerUserSysNo:       10001,
@@ -89,6 +89,7 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 	}
 	req1.Header.Set("Content-Type", "application/json")
 	req1.Header.Set("xid", xid)
+	req1.Header.Set("traceparent", traceparent)
 
 	client := &http.Client{}
 	result1, err1 := client.Do(req1)
@@ -110,6 +111,7 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 	}
 	req2.Header.Set("Content-Type", "application/json")
 	req2.Header.Set("xid", xid)
+	req2.Header.Set("traceparent", traceparent)
 
 	result2, err2 := client.Do(req2)
 	if err2 != nil {
