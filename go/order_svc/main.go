@@ -47,7 +47,7 @@ func main() {
 
 	r.POST("/createSo", func(c *gin.Context) {
 		xid := c.GetHeader("xid")
-
+		traceParent := c.GetHeader("traceparent")
 		type req struct {
 			Req []*dao.SoMaster
 		}
@@ -57,7 +57,7 @@ func main() {
 			return
 		}
 
-		_, err := d.CreateSO(c, xid, q.Req)
+		_, err := d.CreateSO(c, xid, traceParent, q.Req)
 
 		if err != nil {
 			log.Default().Println(err)

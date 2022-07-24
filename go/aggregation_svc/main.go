@@ -17,6 +17,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/dbpack/dbpack-samples/aggregation_svc/svc"
@@ -27,8 +29,10 @@ func main() {
 
 	r.POST("/v1/order/create", func(c *gin.Context) {
 		xid := c.GetHeader("x-dbpack-xid")
-		err := svc.GetSvc().CreateSo(c, xid, false)
+		traceParent := c.GetHeader("traceparent")
+		err := svc.GetSvc().CreateSo(c, xid, traceParent, false)
 		if err != nil {
+			log.Default().Println(err)
 			c.JSON(400, gin.H{
 				"success": false,
 				"message": "fail",
@@ -43,8 +47,10 @@ func main() {
 
 	r.POST("/v1/order/create2", func(c *gin.Context) {
 		xid := c.GetHeader("x-dbpack-xid")
-		err := svc.GetSvc().CreateSo(c, xid, true)
+		traceParent := c.GetHeader("traceparent")
+		err := svc.GetSvc().CreateSo(c, xid, traceParent, true)
 		if err != nil {
+			log.Default().Println(err)
 			c.JSON(400, gin.H{
 				"success": false,
 				"message": "fail",

@@ -5,6 +5,9 @@ Simply, you can build the environment by running the `make run` command. then, y
 - `curl -XPOST http://localhost:13000/v1/order/create2` for transaction rollback test.
 
 Then check whether the database data is consistent.  
+
+You can also view complete distributed transaction tracing data at `http://localhost:16686/`.
+
 Alternatively, you can manually build the environment according to the following steps.
 
 ### Step0: Clone dbpack and dbpack-samples

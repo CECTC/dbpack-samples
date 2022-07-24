@@ -1,5 +1,12 @@
 version: "2.3"
 services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+    networks:
+      - local
   etcd:
     image: docker.io/bitnami/etcd:3
     container_name: etcd
@@ -40,6 +47,7 @@ services:
     volumes:
       - ../configs/config-aggregation.yaml:/config-aggregation.yaml
     depends_on:
+      - jaeger
       - etcd
       - mysql
     command: ["/dbpack", "start", "-c", "/config-aggregation.yaml"]
@@ -53,6 +61,7 @@ services:
     volumes:
       - ../configs/config-product.yaml:/config-product.yaml
     depends_on:
+      - jaeger
       - etcd
       - mysql
     command: ["/dbpack", "start", "-c", "/config-product.yaml"]
@@ -66,6 +75,7 @@ services:
     volumes:
       - ../configs/config-order.yaml:/config-order.yaml
     depends_on:
+      - jaeger
       - etcd
       - mysql
     command: ["/dbpack", "start", "-c", "/config-order.yaml"]

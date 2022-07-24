@@ -50,6 +50,7 @@ func main() {
 
 	r.POST("/allocateInventory", func(c *gin.Context) {
 		xid := c.GetHeader("xid")
+		traceParent := c.GetHeader("traceparent")
 
 		type req struct {
 			Req []*dao.AllocateInventoryReq
@@ -60,7 +61,7 @@ func main() {
 			return
 		}
 
-		err := d.AllocateInventory(c, xid, q.Req)
+		err := d.AllocateInventory(c, xid, traceParent, q.Req)
 
 		if err != nil {
 			log.Default().Println(err)
