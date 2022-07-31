@@ -34,8 +34,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "123456"
     volumes:
-    - ../scripts/order.sql:/docker-entrypoint-initdb.d/order.sql:rw
-    - ../scripts/product.sql:/docker-entrypoint-initdb.d/product.sql:rw
+    - ../../scripts/order.sql:/docker-entrypoint-initdb.d/order.sql:rw
+    - ../../scripts/product.sql:/docker-entrypoint-initdb.d/product.sql:rw
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
   dbpack1:
     image: cectc/dbpack:latest
@@ -45,7 +45,7 @@ services:
     ports:
       - "13000:13000"
     volumes:
-      - ../configs/config-aggregation.yaml:/config-aggregation.yaml
+      - ../../configs/config-aggregation.yaml:/config-aggregation.yaml
     depends_on:
       - jaeger
       - etcd
@@ -59,7 +59,7 @@ services:
     ports:
       - "13307:13307"
     volumes:
-      - ../configs/config-product.yaml:/config-product.yaml
+      - ../../configs/config-product.yaml:/config-product.yaml
     depends_on:
       - jaeger
       - etcd
@@ -73,7 +73,7 @@ services:
     ports:
       - "13308:13308"
     volumes:
-      - ../configs/config-order.yaml:/config-order.yaml
+      - ../../configs/config-order.yaml:/config-order.yaml
     depends_on:
       - jaeger
       - etcd
@@ -82,7 +82,9 @@ services:
   aggregation-svc:
     build:
       context: ${PWD}
-      dockerfile: ./scripts/aggregation/Dockerfile
+      dockerfile: scripts/aggregation/Dockerfile
+      # args:
+      #   GOPROXY: "https://proxy.golang.com.cn,direct"
     container_name: aggregation-svc
     networks:
       - local
@@ -91,7 +93,9 @@ services:
   order-svc:
     build:
       context: ${PWD}
-      dockerfile: ./scripts/order/Dockerfile
+      dockerfile: scripts/order/Dockerfile
+      # args:
+      #   GOPROXY: "https://proxy.golang.com.cn,direct"
     container_name: order-svc
     networks:
       - local
@@ -100,7 +104,9 @@ services:
   product-svc:
     build:
       context: ${PWD}
-      dockerfile: ./scripts/product/Dockerfile
+      dockerfile: scripts/product/Dockerfile
+      # args:
+      #   GOPROXY: "https://proxy.golang.com.cn,direct"
     container_name: product-svc
     networks:
       - local

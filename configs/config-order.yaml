@@ -43,3 +43,5 @@ distributed_transaction:
       - etcd:2379
 
 http_listen_port: 18890
+trace:
+  jaeger_endpoint: http://jaeger:14268/api/traces

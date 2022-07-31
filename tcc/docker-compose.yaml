@@ -1,7 +1,7 @@
 version: "2.3"
 services:
   etcd:
-    image: docker.io/bitnami/etcd:3.5
+    image: docker.io/bitnami/etcd:3
     container_name: etcd
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
@@ -17,81 +17,61 @@ services:
       - local
     ports:
       - "2379:2379"
-  mysql:
-    image: mysql:8.0
-    container_name: dbpack-mysql
-    networks:
-      - local
-    ports:
-    - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "123456"
-    volumes:
-    - ../scripts/order.sql:/docker-entrypoint-initdb.d/order.sql:rw
-    - ../scripts/product.sql:/docker-entrypoint-initdb.d/product.sql:rw
-    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
   dbpack1:
     image: cectc/dbpack:latest
     container_name: dbpack1
     networks:
       - local
-    ports:
-      - "13000:13000"
     volumes:
-      - ../configs/config-aggregation.yaml:/config-aggregation.yaml
+      - ./scripts/service-a/config.yaml:/config.yaml
     depends_on:
       - etcd
-      - mysql
-    command: ["/dbpack", "start", "-c", "/config-aggregation.yaml"]
+    command: ["/dbpack", "start", "-c", "/config.yaml"]
   dbpack2:
     image: cectc/dbpack:latest
     container_name: dbpack2
     networks:
       - local
-    ports:
-      - "13307:13307"
     volumes:
-      - ../configs/config-product.yaml:/config-product.yaml
+      - ./scripts/service-b/config.yaml:/config.yaml
     depends_on:
       - etcd
-      - mysql
-    command: ["/dbpack", "start", "-c", "/config-product.yaml"]
+    command: ["/dbpack", "start", "-c", "/config.yaml"]
   dbpack3:
     image: cectc/dbpack:latest
     container_name: dbpack3
     networks:
       - local
     ports:
-      - "13308:13308"
+      - "8080:8080"
     volumes:
-      - ../configs/config-order.yaml:/config-order.yaml
+      - ./scripts/service-c/config.yaml:/config.yaml
     depends_on:
       - etcd
-      - mysql
-    command: ["/dbpack", "start", "-c", "/config-order.yaml"]
-  aggregation-svc:
+    command: ["/dbpack", "start", "-c", "/config.yaml"]
+  service-a:
     build:
       context: ${PWD}
-      dockerfile: ./scripts/aggregation/Dockerfile
-    container_name: aggregation-svc
+      dockerfile: ./scripts/service-a/Dockerfile
+    container_name: serviceA
     networks:
       - local
     ports:
       - "3000:3000"
-  order-svc:
+  service-b:
     build:
       context: ${PWD}
-      dockerfile: ./scripts/order/Dockerfile
-    container_name: order-svc
+      dockerfile: ./scripts/service-b/Dockerfile
+    container_name: serviceB
     networks:
       - local
     ports:
       - "3001:3001"
-  product-svc:
+  service-c:
     build:
       context: ${PWD}
-      dockerfile: ./scripts/product/Dockerfile
-    container_name: product-svc
+      dockerfile: ./scripts/service-c/Dockerfile
+    container_name: serviceC
     networks:
       - local
     ports:

@@ -1,0 +1,27 @@
+listeners:
+  - protocol_type: http
+    socket_address:
+      address: 0.0.0.0
+      port: 8080
+    config:
+      backend_host: serviceA:8081
+    filters:
+      - httpDTFilter
+
+filters:
+  - name: httpDTFilter
+    kind: HttpDistributedTransaction
+    conf:
+      appid: service-a
+      tcc_resource_infos:
+        - prepare_request_path: "/prepare"
+          commit_request_path: "/confirm"
+          cancel_request_path: "/cancel"
+
+distributed_transaction:
+  appid: service-a
+  retry_dead_threshold: 130000
+  rollback_retry_timeout_unlock_enable: true
+  etcd_config:
+    endpoints:
+      - etcd:2379
