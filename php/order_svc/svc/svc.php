@@ -12,11 +12,11 @@ class OrderDB
     private string $_password = '123456';
     private string $_database = 'order';
 
-    const insertSoMaster = "INSERT /*+ XID('%s') */ INTO order.so_master (sysno, so_id, buyer_user_sysno, seller_company_code, 
+    const insertSoMaster = "INSERT /*+ XID('%s') TraceParent('%s') */ INTO order.so_master (sysno, so_id, buyer_user_sysno, seller_company_code, 
 		receive_division_sysno, receive_address, receive_zip, receive_contact, receive_contact_phone, stock_sysno, 
         payment_type, so_amt, status, order_date, appid, memo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?)";
 
-    const insertSoItem = "INSERT /*+ XID('%s') */ INTO order.so_item(sysno, so_sysno, product_sysno, product_name, cost_price, 
+    const insertSoItem = "INSERT /*+ XID('%s') TraceParent('%s') */ INTO order.so_item(sysno, so_sysno, product_sysno, product_name, cost_price, 
 		original_price, deal_price, quantity) VALUES (?,?,?,?,?,?,?,?)";
 
     public static function getInstance(): OrderDB
@@ -53,13 +53,13 @@ class OrderDB
         return $this->_connection;
     }
 
-    public function createSo(string $xid, array $soMasters): bool
+    public function createSo(string $xid, string $traceParent, array $soMasters): bool
     {
         $this->getConnection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
             $this->getConnection()->beginTransaction();
             foreach ($soMasters as $master) {
-                if (!$this->insertSo($xid, $master)) {
+                if (!$this->insertSo($xid, $traceParent, $master)) {
                     throw new PDOException("failed to insert soMaster");
                 }
             }
@@ -71,11 +71,11 @@ class OrderDB
         return true;
     }
 
-    private function insertSo(string $xid, array $soMaster): bool
+    private function insertSo(string $xid, string $traceParent, array $soMaster): bool
     {
         $soId = hrtime(true);
         $memo = '';
-        $insertSoMasterSql = sprintf(self::insertSoMaster, $xid);
+        $insertSoMasterSql = sprintf(self::insertSoMaster, $xid, $traceParent);
 
         $statement = $this->getConnection()->prepare($insertSoMasterSql);
         $statement->bindValue(1, $soId);
@@ -98,7 +98,7 @@ class OrderDB
         if (!$result) {
             return false;
         }
-        $insertSoItemSql = sprintf(self::insertSoItem, $xid);
+        $insertSoItemSql = sprintf(self::insertSoItem, $xid, $traceParent);
         foreach ($soMaster['soItems'] as $item) {
             $soItemId = hrtime(true);
             $statement = $this->getConnection()->prepare($insertSoItemSql);
