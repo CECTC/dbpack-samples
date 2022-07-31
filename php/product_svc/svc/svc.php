@@ -12,7 +12,7 @@ class ProductDB
     private string $_password = '123456';
     private string $_database = 'product';
 
-    const allocateInventorySql = "update /*+ XID('%s') */ product.inventory set available_qty = available_qty - ?, 
+    const allocateInventorySql = "update /*+ XID('%s') TraceParent('%s') */ product.inventory set available_qty = available_qty - ?, 
 		allocated_qty = allocated_qty + ? where product_sysno = ? and available_qty >= ?";
 
     public static function getInstance(): ProductDB
@@ -49,13 +49,13 @@ class ProductDB
         return $this->_connection;
     }
 
-    public function allocateInventory(string $xid, array $inventories): bool
+    public function allocateInventory(string $xid, string $traceParent, array $inventories): bool
     {
         $this->getConnection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         try {
             $this->getConnection()->beginTransaction();
             foreach ($inventories as $inventory) {
-                $allocateInventorySql = sprintf(self::allocateInventorySql, $xid);
+                $allocateInventorySql = sprintf(self::allocateInventorySql, $xid, $traceParent);
 
                 $statement = $this->getConnection()->prepare($allocateInventorySql);
                 $statement->bindValue(1, $inventory['Qty']);
