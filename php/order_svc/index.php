@@ -6,6 +6,7 @@ $reqPath = strtok($_SERVER["REQUEST_URI"], '?');
 $reqHeaders = getallheaders();
 
 $xid = $reqHeaders['Xid'] ?? '';
+$traceParent = $reqHeaders['Traceparent'] ?? '';
 
 if (empty($xid)) {
     die('xid is not provided!');
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $soMasters = json_decode($reqBody, true);
 
         $orderDB = OrderDB::getInstance();
-        $result = $orderDB->createSo($xid, $soMasters);
+        $result = $orderDB->createSo($xid, $traceParent, $soMasters);
 
         if ($result) {
             responseOK();

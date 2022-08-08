@@ -5,6 +5,7 @@ require './svc/svc.php';
 $reqPath = strtok($_SERVER["REQUEST_URI"], '?');
 $reqHeaders = getallheaders();
 $xid = $reqHeaders['Xid'] ?? '';
+$traceParent = $reqHeaders['Traceparent'] ?? '';
 
 if (empty($xid)) {
     die('xid is not provided!');
@@ -16,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inventories = json_decode($reqBody, true);
 
         $productDB = ProductDB::getInstance();
-        $result = $productDB->allocateInventory($xid, $inventories);
+        $result = $productDB->allocateInventory($xid, $traceParent, $inventories);
 
         if ($result) {
             responseOK();
