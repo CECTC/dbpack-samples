@@ -27,10 +27,10 @@ import (
 )
 
 const (
-	insertSoMaster = `INSERT /*+ XID('%s') TraceParent('%s') */ INTO order.so_master (sysno, so_id, buyer_user_sysno, seller_company_code, 
+	insertSoMaster = `INSERT /*+ XID('%s') */ INTO order.so_master (sysno, so_id, buyer_user_sysno, seller_company_code, 
 		receive_division_sysno, receive_address, receive_zip, receive_contact, receive_contact_phone, stock_sysno, 
         payment_type, so_amt, status, order_date, appid, memo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?)`
-	insertSoItem = `INSERT /*+ XID('%s') TraceParent('%s') */ INTO order.so_item(sysno, so_sysno, product_sysno, product_name, cost_price, 
+	insertSoItem = `INSERT /*+ XID('%s') */ INTO order.so_item(sysno, so_sysno, product_sysno, product_name, cost_price, 
 		original_price, deal_price, quantity) VALUES (?,?,?,?,?,?,?,?)`
 )
 
@@ -79,14 +79,14 @@ type SoItem struct {
 	Quantity      int32   `json:"quantity"`
 }
 
-func (dao *Dao) CreateSO(ctx context.Context, xid, traceParent string, soMasters []*SoMaster) ([]uint64, error) {
+func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster) ([]uint64, error) {
 	result := make([]uint64, 0, len(soMasters))
 	tx, err := dao.Begin()
 	if err != nil {
 		return nil, err
 	}
-	createSoMaster := fmt.Sprintf(insertSoMaster, xid, traceParent)
-	createSoItem := fmt.Sprintf(insertSoItem, xid, traceParent)
+	createSoMaster := fmt.Sprintf(insertSoMaster, xid)
+	createSoItem := fmt.Sprintf(insertSoItem, xid)
 	for _, soMaster := range soMasters {
 		soid := NextID()
 		_, err = tx.Exec(createSoMaster, soid, soid, soMaster.BuyerUserSysNo, soMaster.SellerCompanyCode, soMaster.ReceiveDivisionSysNo,

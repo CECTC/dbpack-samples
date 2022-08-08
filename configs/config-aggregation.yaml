@@ -1,32 +1,33 @@
-listeners:
-  - protocol_type: http
-    socket_address:
-      address: 0.0.0.0
-      port: 13000
-    config:
-      backend_host: aggregation-svc:3000
-    filters:
-      - httpDTFilter
-
-filters:
-  - name: httpDTFilter
-    kind: HttpDistributedTransaction
-    conf:
-      appid: aggregationSvc
-      transaction_infos:
-        - request_path: "/v1/order/create"
-          timeout: 60000
-        - request_path: "/v1/order/create2"
-          timeout: 60000
-
-distributed_transaction:
-  appid: aggregationSvc
-  retry_dead_threshold: 130000
-  rollback_retry_timeout_unlock_enable: true
-  etcd_config:
-    endpoints:
-      - etcd:2379
-
-http_listen_port: 18888
-trace:
+probe_port: 18888
+tracer:
   jaeger_endpoint: http://jaeger:14268/api/traces
+termination_drain_duration: 3s
+app_config:
+  aggregationSvc:
+    distributed_transaction:
+      retry_dead_threshold: 130000
+      rollback_retry_timeout_unlock_enable: true
+      etcd_config:
+        endpoints:
+          - etcd:2379
+
+    listeners:
+      - protocol_type: http
+        socket_address:
+          address: 0.0.0.0
+          port: 13000
+        config:
+          backend_host: aggregation-svc:3000
+        filters:
+          - httpDTFilter
+
+    filters:
+      - name: httpDTFilter
+        kind: HttpDistributedTransaction
+        conf:
+          appid: aggregationSvc
+          transaction_infos:
+            - request_path: "/v1/order/create"
+              timeout: 60000
+            - request_path: "/v1/order/create2"
+              timeout: 60000
