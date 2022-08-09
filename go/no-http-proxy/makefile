@@ -8,4 +8,4 @@ build-product-svc:
 	GOOS="linux"  GOARCH="amd64" CGO_ENABLED=0 go build -o product_svc/ProductSvc ./product_svc
 
 run:
-	docker-compose -f docker-compose.yaml up --build -dcu
+	docker-compose -f docker-compose.yaml up --build -d
